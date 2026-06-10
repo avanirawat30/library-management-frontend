@@ -20,15 +20,23 @@ function App() {
   author: "Paulo Coelho"
 }
 ]);
+const [title, setTitle] = useState("");
+const [author, setAuthor] = useState("");
 function addBook() {
-    setBooks([
-      ...books,
-      {
-        title: "Think and Grow Rich",
-        author: "Napoleon Hill"
-      }
-    ]);
+  if (!title || !author) {
+    return;
   }
+
+  const newBook = {
+    title: title,
+    author: author
+  };
+
+  setBooks([...books, newBook]);
+
+  setTitle("");
+  setAuthor("");
+}
   return (
     <div className="app">
       <Navbar />
@@ -39,6 +47,21 @@ function addBook() {
       <p>
         Manage books, students and borrowing records.
       </p>
+      <div>
+  <input
+    type="text"
+    placeholder="Enter book title"
+    value={title}
+    onChange={(e) => setTitle(e.target.value)}
+  />
+
+  <input
+    type="text"
+    placeholder="Enter author name"
+    value={author}
+    onChange={(e) => setAuthor(e.target.value)}
+  />
+</div>
         <button
   className="action-btn"
   onClick={addBook}
