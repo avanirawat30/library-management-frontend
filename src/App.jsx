@@ -1,27 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import Navbar from "./components/Navbar";
 import BookCard from "./components/BookCard";
 function App() {
-  const [books, setBooks] = useState([
-  {
-    title: "Harry Potter",
-    author: "J.K. Rowling"
-  },
-  {
-    title: "Atomic Habits",
-    author: "James Clear"
-  },
-  {
-    title: "Rich Dad Poor Dad",
-    author: "Robert Kiyosaki"
-  },
-  {
-  title: "The Alchemist",
-  author: "Paulo Coelho"
-}
-]);
+  const [books, setBooks] = useState([]);
 const [title, setTitle] = useState("");
 const [author, setAuthor] = useState("");
+async function fetchBooks() {
+  try {
+    const response = await axios.get(
+  "http://localhost:5000/books"
+);
+
+    setBooks(response.data);
+  } catch (error) {
+    console.log(error);
+  }
+}
+useEffect(() => {
+  fetchBooks();
+}, []);
 function addBook() {
   if (!title || !author) {
     return;
