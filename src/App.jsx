@@ -20,20 +20,27 @@ async function fetchBooks() {
 useEffect(() => {
   fetchBooks();
 }, []);
-function addBook() {
+async function addBook() {
   if (!title || !author) {
     return;
   }
 
-  const newBook = {
-    title: title,
-    author: author
-  };
+  try {
+    await axios.post(
+      "http://localhost:5000/books/add",
+      {
+        title: title,
+        author: author
+      }
+    );
 
-  setBooks([...books, newBook]);
+    fetchBooks();
 
-  setTitle("");
-  setAuthor("");
+    setTitle("");
+    setAuthor("");
+  } catch (error) {
+    console.log(error);
+  }
 }
   return (
     <div className="app">
