@@ -7,6 +7,10 @@ function BookCard(props) {
 
       <p>{props.author}</p>
 
+      <button onClick={props.onEdit}>
+        ✏️ Edit
+      </button>
+
       <button onClick={props.onDelete}>
         🗑️ Delete
       </button>

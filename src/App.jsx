@@ -53,6 +53,29 @@ async function deleteBook(id) {
     console.log(error);
   }
 }
+async function updateBook(id) {
+  const newTitle = prompt("Enter new title");
+
+  const newAuthor = prompt("Enter new author");
+
+  if (!newTitle || !newAuthor) {
+    return;
+  }
+
+  try {
+    await axios.put(
+      `http://localhost:5000/books/${id}`,
+      {
+        title: newTitle,
+        author: newAuthor
+      }
+    );
+
+    fetchBooks();
+  } catch (error) {
+    console.log(error);
+  }
+}
   return (
     <div className="app">
       <Navbar />
@@ -86,11 +109,12 @@ async function deleteBook(id) {
 </button>
         {books.map((book) => (
   <BookCard
-    key={book._id}
-    title={book.title}
-    author={book.author}
-    onDelete={() => deleteBook(book._id)}
-  />
+  key={book._id}
+  title={book.title}
+  author={book.author}
+  onEdit={() => updateBook(book._id)}
+  onDelete={() => deleteBook(book._id)}
+/>
 ))}
     </div>
   );
