@@ -42,6 +42,17 @@ async function addBook() {
     console.log(error);
   }
 }
+async function deleteBook(id) {
+  try {
+    await axios.delete(
+      `http://localhost:5000/books/${id}`
+    );
+
+    fetchBooks();
+  } catch (error) {
+    console.log(error);
+  }
+}
   return (
     <div className="app">
       <Navbar />
@@ -73,11 +84,12 @@ async function addBook() {
 >
    ➕  Add Book
 </button>
-        {books.map((book, index) => (
+        {books.map((book) => (
   <BookCard
-    key={index}
+    key={book._id}
     title={book.title}
     author={book.author}
+    onDelete={() => deleteBook(book._id)}
   />
 ))}
     </div>
