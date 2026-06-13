@@ -3,6 +3,7 @@ import axios from "axios";
 import Navbar from "./components/Navbar";
 import BookCard from "./components/BookCard";
 import Login from "./components/Login";
+import Register from "./components/Register";
 function App() {
   const [books, setBooks] = useState([]);
 const [title, setTitle] = useState("");
@@ -27,13 +28,20 @@ async function addBook() {
   }
 
   try {
-    await axios.post(
-      "http://localhost:5000/books/add",
-      {
-        title: title,
-        author: author
-      }
-    );
+    const token = localStorage.getItem("token");
+
+await axios.post(
+  "http://localhost:5000/books/add",
+  {
+    title: title,
+    author: author
+  },
+  {
+    headers: {
+      Authorization: token
+    }
+  }
+);
 
     fetchBooks();
 
@@ -45,8 +53,15 @@ async function addBook() {
 }
 async function deleteBook(id) {
   try {
+    const token = localStorage.getItem("token");
+
     await axios.delete(
-      `http://localhost:5000/books/${id}`
+      `http://localhost:5000/books/${id}`,
+      {
+        headers: {
+          Authorization: token
+        }
+      }
     );
 
     fetchBooks();
@@ -64,11 +79,18 @@ async function updateBook(id) {
   }
 
   try {
+    const token = localStorage.getItem("token");
+
     await axios.put(
       `http://localhost:5000/books/${id}`,
       {
         title: newTitle,
         author: newAuthor
+      },
+      {
+        headers: {
+          Authorization: token
+        }
       }
     );
 
@@ -80,6 +102,7 @@ async function updateBook(id) {
   return (
     <div className="app">
       <Navbar />
+      <Register />
     <Login />
       <h2 className="heading">
   Welcome to Library Management System
