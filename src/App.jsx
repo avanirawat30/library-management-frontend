@@ -109,6 +109,48 @@ async function updateBook(id) {
     console.log(error);
   }
 }
+async function issueBook(id) {
+  try {
+    const token = localStorage.getItem("token");
+
+    await axios.post(
+      `http://localhost:5000/issues/issue/${id}`,
+      {},
+      {
+        headers: {
+          Authorization: token
+        }
+      }
+    );
+
+    fetchBooks();
+
+  } catch (error) {
+    console.log(error);
+    console.log(error.response.data);
+  }
+}
+async function returnBook(id) {
+  try {
+    const token = localStorage.getItem("token");
+
+    await axios.post(
+      `http://localhost:5000/issues/return/${id}`,
+      {},
+      {
+        headers: {
+          Authorization: token
+        }
+      }
+    );
+
+    fetchBooks();
+
+  } catch (error) {
+    console.log(error);
+    console.log(error.response.data);
+  }
+}
 function logoutUser() {
   localStorage.removeItem("token");
   localStorage.removeItem("role");
@@ -178,9 +220,13 @@ function logoutUser() {
   key={book._id}
   title={book.title}
   author={book.author}
+  available={book.available}
   isAdmin={role === "admin"}
+  isStudent={role === "student"}
   onEdit={() => updateBook(book._id)}
   onDelete={() => deleteBook(book._id)}
+  onIssue={() => issueBook(book._id)}
+  onReturn={() => returnBook(book._id)}
 />
     ))}
   </div>
