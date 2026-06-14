@@ -5,16 +5,17 @@ function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [role, setRole] = useState("student");
   async function registerUser() {
     try {
       const response = await axios.post(
         "http://localhost:5000/users/register",
         {
-          name,
-          email,
-          password
-        }
+  name,
+  email,
+  password,
+  role
+}
       );
 
       console.log("REGISTER SUCCESS");
@@ -54,6 +55,13 @@ function Register() {
       <button onClick={registerUser}>
         Register
       </button>
+      <select
+  value={role}
+  onChange={(e) => setRole(e.target.value)}
+>
+  <option value="student">Student</option>
+  <option value="admin">Admin</option>
+</select>
     </div>
   );
 }

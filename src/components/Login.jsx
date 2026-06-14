@@ -16,6 +16,10 @@ localStorage.setItem(
   "token",
   response.data.token
 );
+localStorage.setItem(
+  "role",
+  response.data.role
+);
 setIsLoggedIn(true);
 
 console.log("LOGIN SUCCESS");

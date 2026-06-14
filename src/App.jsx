@@ -9,6 +9,7 @@ function App() {
 const [title, setTitle] = useState("");
 const [author, setAuthor] = useState("");
 const [isLoggedIn, setIsLoggedIn] = useState(false);
+const role = localStorage.getItem("role");
 async function fetchBooks() {
   try {
     const response = await axios.get(
@@ -56,8 +57,9 @@ await axios.post(
     setTitle("");
     setAuthor("");
   } catch (error) {
-    console.log(error);
-  }
+  console.log(error);
+  console.log(error.response.data);
+}
 }
 async function deleteBook(id) {
   try {
@@ -109,7 +111,7 @@ async function updateBook(id) {
 }
 function logoutUser() {
   localStorage.removeItem("token");
-
+  localStorage.removeItem("role");
   setIsLoggedIn(false);
 }
   return (
@@ -144,41 +146,42 @@ function logoutUser() {
       </>
     )}
 
-    {isLoggedIn && (
-      <>
-        <div>
-          <input
-            type="text"
-            placeholder="Enter book title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
+    {isLoggedIn && role === "admin" && (
+  <>
+    <div>
+      <input
+        type="text"
+        placeholder="Enter book title"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+      />
 
-          <input
-            type="text"
-            placeholder="Enter author name"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-          />
-        </div>
+      <input
+        type="text"
+        placeholder="Enter author name"
+        value={author}
+        onChange={(e) => setAuthor(e.target.value)}
+      />
+    </div>
 
-        <button
-          className="action-btn"
-          onClick={addBook}
-        >
-          ➕ Add Book
-        </button>
-      </>
-    )}
+    <button
+      className="action-btn"
+      onClick={addBook}
+    >
+      ➕ Add Book
+    </button>
+  </>
+)}
 
     {books.map((book) => (
       <BookCard
-        key={book._id}
-        title={book.title}
-        author={book.author}
-        onEdit={() => updateBook(book._id)}
-        onDelete={() => deleteBook(book._id)}
-      />
+  key={book._id}
+  title={book.title}
+  author={book.author}
+  isAdmin={role === "admin"}
+  onEdit={() => updateBook(book._id)}
+  onDelete={() => deleteBook(book._id)}
+/>
     ))}
   </div>
 );
