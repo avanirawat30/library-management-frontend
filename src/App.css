@@ -8,8 +8,121 @@
   text-align: center;
 }
 
+input {
+  padding: 10px;
+  margin: 5px;
+  border-radius: 5px;
+}
+
+button {
+  padding: 10px 15px;
+  margin: 5px;
+  cursor: pointer;
+}
+
 .action-btn {
   padding: 10px 20px;
   margin: 15px 0;
-  cursor: pointer;
+}
+
+.dashboard {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+.message-box {
+  padding: 12px;
+  margin: 15px 0;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+  border: 1px solid #ddd;
+}
+.stats-container {
+  display: flex;
+  gap: 15px;
+  margin: 15px 0;
+}
+
+.stat-card {
+  flex: 1;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.stat-card h3 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.stat-card p {
+  margin-top: 8px;
+}
+.search-container {
+  margin: 20px 0;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 16px;
+}
+.search-container {
+  margin: 20px 0;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 16px;
+}
+.stats-container {
+  display: flex;
+  gap: 15px;
+  margin: 15px 0;
+}
+
+.stat-card {
+  flex: 1;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.stat-card h3 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.stat-card p {
+  margin-top: 8px;
+}
+.logout-btn {
+  margin-left: 10px;
+}
+.auth-container {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  align-items: flex-start;
+  margin: 20px 0;
+}
+
+.auth-box {
+  flex: 1;
+  max-width: 350px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }

@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 import BookCard from "./components/BookCard";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import "./App.css";
 function App() {
   const [books, setBooks] = useState([]);
 const [title, setTitle] = useState("");
@@ -11,6 +12,7 @@ const [author, setAuthor] = useState("");
 const [isLoggedIn, setIsLoggedIn] = useState(false);
 const [myBooks, setMyBooks] = useState([]);
 const [searchTerm, setSearchTerm] = useState("");
+const [message, setMessage] = useState("");
 const role = localStorage.getItem("role");
 async function fetchBooks() {
   try {
@@ -76,12 +78,13 @@ await axios.post(
 );
 
     fetchBooks();
-
+    setMessage("✅ Book added successfully");
     setTitle("");
     setAuthor("");
   } catch (error) {
   console.log(error);
   console.log(error.response.data);
+  setMessage("❌ Failed to add book");
 }
 }
 async function deleteBook(id) {
@@ -98,8 +101,10 @@ async function deleteBook(id) {
     );
 
     fetchBooks();
+    setMessage("✅ Book deleted successfully");
   } catch (error) {
     console.log(error);
+    setMessage("❌ Failed to delete book");
   }
 }
 async function updateBook(id) {
@@ -128,8 +133,10 @@ async function updateBook(id) {
     );
 
     fetchBooks();
+    setMessage("✅ Book updated successfully");
   } catch (error) {
     console.log(error);
+    setMessage("❌ Failed to update book");
   }
 }
 async function issueBook(id) {
@@ -147,11 +154,13 @@ async function issueBook(id) {
     );
 
     fetchBooks();
+    setMessage("✅ Book issued successfully");
     fetchMyBooks();
 
   } catch (error) {
     console.log(error);
     console.log(error.response.data);
+    setMessage("❌ Unable to issue book");
   }
 }
 async function returnBook(id) {
@@ -169,11 +178,13 @@ async function returnBook(id) {
     );
 
     fetchBooks();
+    setMessage("✅ Book returned successfully");
     fetchMyBooks();
 
   } catch (error) {
     console.log(error);
     console.log(error.response.data);
+    setMessage("❌ Unable to return book");
   }
 }
 function logoutUser() {
@@ -182,6 +193,7 @@ function logoutUser() {
 
   setIsLoggedIn(false);
   setMyBooks([]);
+  setMessage("");
 }
 const totalBooks = books.length;
 
@@ -205,17 +217,28 @@ const filteredBooks = books.filter((book) =>
     <Navbar />
 
     {isLoggedIn ? (
-      <div>
-        <h3>✅ Logged In</h3>
+  <div>
+    <h3>
+      {role === "admin"
+        ? "✅ Logged In as Admin"
+        : "✅ Logged In as Student"}
+    </h3>
 
-        <button onClick={logoutUser}>
-          Logout
-        </button>
-      </div>
-    ) : (
-      <h3>❌ Logged Out</h3>
-    )}
-
+    <button
+      className="logout-btn"
+      onClick={logoutUser}
+    >
+      Logout
+    </button>
+  </div>
+) : (
+  <h3>👋 Welcome Guest</h3>
+)}
+    {message && (
+  <div className="message-box">
+    {message}
+  </div>
+)}
     {!isLoggedIn && (
       <>
         <h2 className="heading">
@@ -225,25 +248,47 @@ const filteredBooks = books.filter((book) =>
         <p>
           Manage books, students and borrowing records.
         </p>
+<div className="auth-container">
 
-        <Register />
+  <div className="auth-box">
+    <Register />
+  </div>
 
-        <Login setIsLoggedIn={setIsLoggedIn} 
-        fetchMyBooks={fetchMyBooks}/>
+  <div className="auth-box">
+    <Login
+      setIsLoggedIn={setIsLoggedIn}
+      fetchMyBooks={fetchMyBooks}
+    />
+  </div>
+
+</div>
       </>
     )}
 
     {isLoggedIn && role === "admin" && (
   <>
-  <div>
-    <h2>📊 Library Statistics</h2>
+  <div className="dashboard">
+  <h2>📊 Library Statistics</h2>
 
-    <p>📚 Total Books: {totalBooks}</p>
+  <div className="stats-container">
 
-    <p>✅ Available Books: {availableBooks}</p>
+    <div className="stat-card">
+      <h3>{totalBooks}</h3>
+      <p>Total Books</p>
+    </div>
 
-    <p>❌ Issued Books: {issuedBooks}</p>
+    <div className="stat-card">
+      <h3>{availableBooks}</h3>
+      <p>Available</p>
+    </div>
+
+    <div className="stat-card">
+      <h3>{issuedBooks}</h3>
+      <p>Issued</p>
+    </div>
+
   </div>
+</div>
 
   <div>
       <input
@@ -275,25 +320,32 @@ const filteredBooks = books.filter((book) =>
   <div>
     <h2>📚 My Issued Books</h2>
 
-    {myBooks.map((issue) => (
-      <div key={issue._id}>
-        <p>
-          {issue.book.title}
-          {" - "}
-          {issue.book.author}
-        </p>
-      </div>
-    ))}
+    {myBooks.length === 0 ? (
+  <p>No books issued yet.</p>
+) : (
+  myBooks.map((issue) => (
+    <div key={issue._id}>
+      <p>
+        {issue.book.title}
+        {" - "}
+        {issue.book.author}
+      </p>
+    </div>
+  ))
+)}
   </div>
 )}
-<input
-  type="text"
-  placeholder="Search by title or author"
-  value={searchTerm}
-  onChange={(e) =>
-    setSearchTerm(e.target.value)
-  }
-/>
+<div className="search-container">
+  <input
+    className="search-input"
+    type="text"
+    placeholder="🔍 Search books by title or author..."
+    value={searchTerm}
+    onChange={(e) =>
+      setSearchTerm(e.target.value)
+    }
+  />
+</div>
 
     {filteredBooks.map((book) => (
       <BookCard

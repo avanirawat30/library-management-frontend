@@ -1,14 +1,16 @@
 import { useState } from "react";
 import axios from "axios";
 
+
 function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("student");
+  const [message, setMessage] = useState("");
   async function registerUser() {
     try {
-      const response = await axios.post(
+      await axios.post(
         "http://localhost:5000/users/register",
         {
   name,
@@ -18,12 +20,15 @@ function Register() {
 }
       );
 
-      console.log("REGISTER SUCCESS");
-      console.log(response.data);
+     setMessage("✅ Registration successful. Please login.");
+
+setName("");
+setEmail("");
+setPassword("");
+setRole("student");
 
     } catch (error) {
-      console.log("REGISTER FAILED");
-      console.log(error.response.data);
+      setMessage("❌ Registration failed.");
     }
   }
 
@@ -51,7 +56,9 @@ function Register() {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-
+      {message && (
+  <p>{message}</p>
+)}
       <button onClick={registerUser}>
         Register
       </button>

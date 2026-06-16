@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-function Login({ setIsLoggedIn, fetchMyBooks={fetchMyBooks}}) {
+function Login({ setIsLoggedIn, fetchMyBooks}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 async function loginUser() {

@@ -3,5 +3,71 @@
   border-radius: 10px;
   padding: 15px;
   margin: 15px 0;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+  transition: transform 0.2s;
+}
+
+.book-card:hover {
+  transform: scale(1.02);
+}
+
+.book-card h3 {
+  margin-bottom: 8px;
+}
+
+.book-card p {
+  margin-bottom: 10px;
+}
+
+.book-card button {
+  margin-right: 10px;
+}
+.book-card {
+  background: white;
+}
+
+.book-card h3 {
+  margin-top: 0;
+}
+
+.book-card button {
+  min-width: 120px;
+}
+.book-card:hover {
+  transform: scale(1.02);
+}
+
+.book-card h3 {
+  margin-bottom: 8px;
+}
+
+.book-card p {
+  margin-bottom: 10px;
+}
+
+.book-card button {
+  margin-right: 10px;
+}
+.status {
+  font-weight: bold;
+  margin: 10px 0;
+}
+.edit-btn {
+  background-color: #ffd54f;
+}
+
+.delete-btn {
+  background-color: #ef5350;
+  color: white;
+}
+
+.issue-btn {
+  background-color: #66bb6a;
+  color: white;
+}
+
+.return-btn {
+  background-color: #42a5f5;
+  color: white;
 }
