@@ -10,6 +10,7 @@ const [title, setTitle] = useState("");
 const [author, setAuthor] = useState("");
 const [isLoggedIn, setIsLoggedIn] = useState(false);
 const [myBooks, setMyBooks] = useState([]);
+const [searchTerm, setSearchTerm] = useState("");
 const role = localStorage.getItem("role");
 async function fetchBooks() {
   try {
@@ -52,6 +53,7 @@ useEffect(() => {
   fetchMyBooks();
 }
 }, []);
+
 async function addBook() {
   if (!title || !author) {
     return;
@@ -181,6 +183,23 @@ function logoutUser() {
   setIsLoggedIn(false);
   setMyBooks([]);
 }
+const totalBooks = books.length;
+
+const availableBooks = books.filter(
+  (book) => book.available
+).length;
+
+const issuedBooks = books.filter(
+  (book) => !book.available
+).length;
+const filteredBooks = books.filter((book) =>
+  book.title
+    .toLowerCase()
+    .includes(searchTerm.toLowerCase()) ||
+  book.author
+    .toLowerCase()
+    .includes(searchTerm.toLowerCase())
+);
   return (
   <div className="app">
     <Navbar />
@@ -216,7 +235,17 @@ function logoutUser() {
 
     {isLoggedIn && role === "admin" && (
   <>
-    <div>
+  <div>
+    <h2>📊 Library Statistics</h2>
+
+    <p>📚 Total Books: {totalBooks}</p>
+
+    <p>✅ Available Books: {availableBooks}</p>
+
+    <p>❌ Issued Books: {issuedBooks}</p>
+  </div>
+
+  <div>
       <input
         type="text"
         placeholder="Enter book title"
@@ -257,8 +286,16 @@ function logoutUser() {
     ))}
   </div>
 )}
+<input
+  type="text"
+  placeholder="Search by title or author"
+  value={searchTerm}
+  onChange={(e) =>
+    setSearchTerm(e.target.value)
+  }
+/>
 
-    {books.map((book) => (
+    {filteredBooks.map((book) => (
       <BookCard
   key={book._id}
   title={book.title}
