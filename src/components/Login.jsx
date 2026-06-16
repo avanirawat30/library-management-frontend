@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-function Login({ setIsLoggedIn }) {
+function Login({ setIsLoggedIn, fetchMyBooks={fetchMyBooks}}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 async function loginUser() {
@@ -21,7 +21,7 @@ localStorage.setItem(
   response.data.role
 );
 setIsLoggedIn(true);
-
+fetchMyBooks();
 console.log("LOGIN SUCCESS");
 console.log(response.data);
 

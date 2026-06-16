@@ -9,6 +9,7 @@ function App() {
 const [title, setTitle] = useState("");
 const [author, setAuthor] = useState("");
 const [isLoggedIn, setIsLoggedIn] = useState(false);
+const [myBooks, setMyBooks] = useState([]);
 const role = localStorage.getItem("role");
 async function fetchBooks() {
   try {
@@ -21,6 +22,25 @@ async function fetchBooks() {
     console.log(error);
   }
 }
+async function fetchMyBooks() {
+  try {
+    const token = localStorage.getItem("token");
+
+    const response = await axios.get(
+      "http://localhost:5000/issues/my-books",
+      {
+        headers: {
+          Authorization: token
+        }
+      }
+    );
+
+    setMyBooks(response.data);
+
+  } catch (error) {
+    console.log(error);
+  }
+}
 useEffect(() => {
   fetchBooks();
 }, []);
@@ -28,8 +48,9 @@ useEffect(() => {
   const token = localStorage.getItem("token");
 
   if (token) {
-    setIsLoggedIn(true);
-  }
+  setIsLoggedIn(true);
+  fetchMyBooks();
+}
 }, []);
 async function addBook() {
   if (!title || !author) {
@@ -124,6 +145,7 @@ async function issueBook(id) {
     );
 
     fetchBooks();
+    fetchMyBooks();
 
   } catch (error) {
     console.log(error);
@@ -145,6 +167,7 @@ async function returnBook(id) {
     );
 
     fetchBooks();
+    fetchMyBooks();
 
   } catch (error) {
     console.log(error);
@@ -154,7 +177,9 @@ async function returnBook(id) {
 function logoutUser() {
   localStorage.removeItem("token");
   localStorage.removeItem("role");
+
   setIsLoggedIn(false);
+  setMyBooks([]);
 }
   return (
   <div className="app">
@@ -184,7 +209,8 @@ function logoutUser() {
 
         <Register />
 
-        <Login setIsLoggedIn={setIsLoggedIn} />
+        <Login setIsLoggedIn={setIsLoggedIn} 
+        fetchMyBooks={fetchMyBooks}/>
       </>
     )}
 
@@ -203,8 +229,10 @@ function logoutUser() {
         placeholder="Enter author name"
         value={author}
         onChange={(e) => setAuthor(e.target.value)}
+        
       />
     </div>
+    
 
     <button
       className="action-btn"
@@ -213,6 +241,21 @@ function logoutUser() {
       ➕ Add Book
     </button>
   </>
+)}
+{isLoggedIn && role === "student" && (
+  <div>
+    <h2>📚 My Issued Books</h2>
+
+    {myBooks.map((issue) => (
+      <div key={issue._id}>
+        <p>
+          {issue.book.title}
+          {" - "}
+          {issue.book.author}
+        </p>
+      </div>
+    ))}
+  </div>
 )}
 
     {books.map((book) => (
