@@ -13,6 +13,7 @@ const [isLoggedIn, setIsLoggedIn] = useState(false);
 const [myBooks, setMyBooks] = useState([]);
 const [searchTerm, setSearchTerm] = useState("");
 const [message, setMessage] = useState("");
+const [allIssuedBooks, setAllIssuedBooks] = useState([]);
 const role = localStorage.getItem("role");
 async function fetchBooks() {
   try {
@@ -51,11 +52,34 @@ useEffect(() => {
   const token = localStorage.getItem("token");
 
   if (token) {
-  setIsLoggedIn(true);
-  fetchMyBooks();
-}
-}, []);
+    setIsLoggedIn(true);
 
+    fetchMyBooks();
+
+    if (role === "admin") {
+      fetchAllIssuedBooks();
+    }
+  }
+}, []);
+async function fetchAllIssuedBooks() {
+  try {
+    const token = localStorage.getItem("token");
+
+    const response = await axios.get(
+      "http://localhost:5000/issues/all-issued",
+      {
+        headers: {
+          Authorization: token
+        }
+      }
+    );
+
+    setAllIssuedBooks(response.data);
+
+  } catch (error) {
+    console.log(error);
+  }
+}
 async function addBook() {
   if (!title || !author) {
     return;
@@ -103,9 +127,13 @@ async function deleteBook(id) {
     fetchBooks();
     setMessage("✅ Book deleted successfully");
   } catch (error) {
-    console.log(error);
-    setMessage("❌ Failed to delete book");
-  }
+  console.log(error);
+
+  setMessage(
+    error.response?.data?.message ||
+    "❌ Failed to delete book"
+  );
+}
 }
 async function updateBook(id) {
   const newTitle = prompt("Enter new title");
@@ -142,7 +170,6 @@ async function updateBook(id) {
 async function issueBook(id) {
   try {
     const token = localStorage.getItem("token");
-
     await axios.post(
       `http://localhost:5000/issues/issue/${id}`,
       {},
@@ -156,7 +183,9 @@ async function issueBook(id) {
     fetchBooks();
     setMessage("✅ Book issued successfully");
     fetchMyBooks();
-
+if (role === "admin") {
+  fetchAllIssuedBooks();
+}
   } catch (error) {
     console.log(error);
     console.log(error.response.data);
@@ -180,6 +209,9 @@ async function returnBook(id) {
     fetchBooks();
     setMessage("✅ Book returned successfully");
     fetchMyBooks();
+    if (role === "admin") {
+  fetchAllIssuedBooks();
+}
 
   } catch (error) {
     console.log(error);
@@ -204,6 +236,17 @@ const availableBooks = books.filter(
 const issuedBooks = books.filter(
   (book) => !book.available
 ).length;
+const today = new Date();
+const dueSoonBooks = allIssuedBooks.filter((issue) => {
+  if (!issue.dueDate) return false;
+
+  const dueDate = new Date(issue.dueDate);
+
+  const diffDays =
+    (dueDate - today) / (1000 * 60 * 60 * 24);
+
+  return diffDays <= 3; // due soon or overdue
+});
 const filteredBooks = books.filter((book) =>
   book.title
     .toLowerCase()
@@ -286,10 +329,38 @@ const filteredBooks = books.filter((book) =>
       <h3>{issuedBooks}</h3>
       <p>Issued</p>
     </div>
+    <div className="stat-card">
+  <h3>{dueSoonBooks.length}</h3>
+  <p>📌 Due Soon</p>
+</div>
 
   </div>
 </div>
+<h3>📅 Books Due Soon</h3>
 
+{dueSoonBooks.length === 0 ? (
+  <p>No books due soon.</p>
+) : (
+  dueSoonBooks.map((issue) => (
+    <div key={issue._id}>
+      <p>
+        <strong>{issue.book?.title || "Book Deleted"}</strong>
+      </p>
+
+      <p>
+        <p>
+  Borrowed by: {issue.user?.name || "Unknown User"}
+</p>
+      </p>
+
+      <p>
+        Due: {new Date(
+          issue.dueDate
+        ).toDateString()}
+      </p>
+    </div>
+  ))
+)}
   <div>
       <input
         type="text"
@@ -323,15 +394,37 @@ const filteredBooks = books.filter((book) =>
     {myBooks.length === 0 ? (
   <p>No books issued yet.</p>
 ) : (
-  myBooks.map((issue) => (
-    <div key={issue._id}>
+  myBooks.map((issue) => {
+  const isOverdue =
+    new Date() > new Date(issue.dueDate);
+
+  return (
+    <div key={issue._id} className="issue-card">
+      <h3>{issue.book?.title || "Book Deleted"}</h3>
+<p>Author: {issue.book?.author || "Unknown Author"}</p>
+
       <p>
-        {issue.book.title}
-        {" - "}
-        {issue.book.author}
+        Issued On:{" "}
+        {new Date(issue.issueDate).toDateString()}
       </p>
+
+      <p>
+        Due Date:{" "}
+        {new Date(issue.dueDate).toDateString()}
+      </p>
+
+      {isOverdue ? (
+        <p style={{ color: "red", fontWeight: "bold" }}>
+          🔴 OVERDUE
+        </p>
+      ) : (
+        <p style={{ color: "green" }}>
+          🟢 ON TIME
+        </p>
+      )}
     </div>
-  ))
+  );
+})
 )}
   </div>
 )}

@@ -3,6 +3,7 @@ import axios from "axios";
 function Login({ setIsLoggedIn, fetchMyBooks}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 async function loginUser() {
   try {
     const response = await axios.post(
@@ -20,6 +21,7 @@ localStorage.setItem(
   "role",
   response.data.role
 );
+setErrorMessage("");
 setIsLoggedIn(true);
 fetchMyBooks();
 console.log("LOGIN SUCCESS");
@@ -27,7 +29,12 @@ console.log(response.data);
 
   } catch (error) {
   console.log("LOGIN FAILED");
-console.log(error.response.data);
+  console.log(error.response.data);
+
+  setErrorMessage(
+    error.response?.data?.message ||
+    "❌ Invalid email or password"
+  );
 }
 }
   return (
@@ -51,6 +58,11 @@ console.log(error.response.data);
       <button onClick={loginUser}>
   Login
 </button>
+{errorMessage && (
+  <p style={{ color: "red" }}>
+    {errorMessage}
+  </p>
+)}
     </div>
   );
 }
