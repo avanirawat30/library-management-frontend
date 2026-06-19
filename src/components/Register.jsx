@@ -11,7 +11,7 @@ function Register() {
   async function registerUser() {
     try {
       await axios.post(
-        "http://localhost:5000/users/register",
+        "https://library-management-backend-8k7b.onrender.com/users/register",
         {
   name,
   email,

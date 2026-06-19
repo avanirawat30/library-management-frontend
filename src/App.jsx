@@ -18,7 +18,7 @@ const role = localStorage.getItem("role");
 async function fetchBooks() {
   try {
     const response = await axios.get(
-  "http://localhost:5000/books"
+  "https://library-management-backend-8k7b.onrender.com/books"
 );
 
     setBooks(response.data);
@@ -31,7 +31,7 @@ async function fetchMyBooks() {
     const token = localStorage.getItem("token");
 
     const response = await axios.get(
-      "http://localhost:5000/issues/my-books",
+      "https://library-management-backend-8k7b.onrender.com/issues/my-books",
       {
         headers: {
           Authorization: token
@@ -66,7 +66,7 @@ async function fetchAllIssuedBooks() {
     const token = localStorage.getItem("token");
 
     const response = await axios.get(
-      "http://localhost:5000/issues/all-issued",
+      "https://library-management-backend-8k7b.onrender.com/issues/all-issued",
       {
         headers: {
           Authorization: token
@@ -89,7 +89,7 @@ async function addBook() {
     const token = localStorage.getItem("token");
 
 await axios.post(
-  "http://localhost:5000/books/add",
+  "https://library-management-backend-8k7b.onrender.com/books/add",
   {
     title: title,
     author: author
@@ -116,7 +116,7 @@ async function deleteBook(id) {
     const token = localStorage.getItem("token");
 
     await axios.delete(
-      `http://localhost:5000/books/${id}`,
+      `https://library-management-backend-8k7b.onrender.com/books/${id}`,
       {
         headers: {
           Authorization: token
@@ -148,7 +148,7 @@ async function updateBook(id) {
     const token = localStorage.getItem("token");
 
     await axios.put(
-      `http://localhost:5000/books/${id}`,
+      `https://library-management-backend-8k7b.onrender.com/books/${id}`,
       {
         title: newTitle,
         author: newAuthor
@@ -171,7 +171,7 @@ async function issueBook(id) {
   try {
     const token = localStorage.getItem("token");
     await axios.post(
-      `http://localhost:5000/issues/issue/${id}`,
+      `https://library-management-backend-8k7b.onrender.com/issues/issue/${id}`,
       {},
       {
         headers: {
@@ -197,7 +197,7 @@ async function returnBook(id) {
     const token = localStorage.getItem("token");
 
     await axios.post(
-      `http://localhost:5000/issues/return/${id}`,
+      `https://library-management-backend-8k7b.onrender.com/issues/return/${id}`,
       {},
       {
         headers: {
